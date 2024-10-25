@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Navbar -->
+  <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between">
+      <div class="text-xl font-bold">Day Tracker</div>
+      <div>
+        <a href="index.html" class="text-white px-4">Home</a>
+        
+      </div>
+    </div>
+  </nav>
+  
+
+  <!-- Main Content (Dynamically Changes Based on Page) -->
+  <div id="content"></div>
+
+  <!-- Home Page (Day Tracker) -->
+  <div id="day-tracker-content" class="container mx-auto my-4">
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+      <h2 class="text-lg font-semibold">Current Date: <span id="currentDate"></span></h2>
+      <input type="date" id="datePicker" class="mt-2 p-2 bg-gray-700 text-white rounded-lg" />
+    </div>
+
+    <div class="my-4">
+      <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+        <h2 class="text-lg font-semibold">Efficiency Score: <span id="efficiencyScore">0%</span></h2>
+        <div class="bg-gray-700 rounded-lg h-4 mt-2">
+          <div id="progressBar" class="bg-green-500 h-4 rounded-lg" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+      <h2 class="text-lg font-semibold mb-4">Tasks for the Day</h2>
+      <div id="taskBlocks"></div>
+      <button onclick="calculateEfficiency()" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+        Calculate Efficiency
+      </button>
+    </div>
+  </div>
+
+  <!-- Progress Page -->
+  <div id="progress-content" class="hidden container mx-auto my-4">
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+      <h2 class="text-lg font-semibold">Progress Over Time</h2>
+      <canvas id="progressChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Page Navigation and Routing
+    const dayTrackerContent = document.getElementById('day-tracker-content');
+    const progressContent = document.getElementById('progress-content');
+
+    const pathname = window.location.pathname;
+    if (pathname.includes('progress.html')) {
+      dayTrackerContent.classList.add('hidden');
+      progressContent.classList.remove('hidden');
+      renderProgressChart();
+    } else {
+      dayTrackerContent.classList.remove('hidden');
+      progressContent.classList.add('hidden');
+    }
+
+    const datePicker = document.getElementById('datePicker');
+    const tasksContainer = document.getElementById('taskBlocks');
+    let currentDateKey;
+
+    // Set default date in the calendar to today's date
+    function setDefaultDate() {
+      const today = new Date().toISOString().split('T')[0];
+      datePicker.value = today;
+      document.getElementById('currentDate').textContent = formatDate(today);
+      currentDateKey = today;
+    }
+
+    function formatDate(dateString) {
+      const dateOptions = { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'long', day: 'numeric' };
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-IN', dateOptions);
+    }
+
+    // Generate task fields in blocks of 6 hours
+    function generateTaskBlocks() {
+      tasksContainer.innerHTML = '';
+      const hourBlocks = [
+        { start: 1, end: 6, label: '1 AM - 6 AM' },
+        { start: 7, end: 12, label: '7 AM - 12 PM' },
+        { start: 13, end: 18, label: '1 PM - 6 PM' },
+        { start: 19, end: 24, label: '7 PM - 12 AM' },
+      ];
+
+      hourBlocks.forEach((block, index) => {
+        const blockId = `block${index}`;
+        const hoursHtml = generateHourlyFields(block.start, block.end);
+        const blockHtml = `
+          <div class="mb-4">
+            <button onclick="toggleBlock('${blockId}')" class="w-full text-left bg-gray-700 text-white px-4 py-2 rounded-lg">
+              ${block.label}
+            </button>
+            <div id="${blockId}" class="hidden bg-gray-800 mt-2 p-4 rounded-lg shadow-md">
+              ${hoursHtml}
+            </div>
+          </div>
+        `;
+        tasksContainer.innerHTML += blockHtml;
+      });
+
+      loadSavedData();
+      calculateEfficiency();
+    }
+
+    function generateHourlyFields(startHour, endHour) {
+      let html = '';
+      for (let i = startHour; i <= endHour; i++) {
+        const hourLabel = i <= 12 ? `${i} AM` : `${i - 12} PM`;
+        html += `
+          <div class="mb-4 flex items-center justify-between">
+            <div class="w-1/2">
+              <label class="block mb-1">${hourLabel}</label>
+              <input type="text" id="task${i}" class="w-full p-2 bg-gray-700 text-white rounded-lg" placeholder="Optional task" onchange="saveData(${i})" />
+            </div>
+            <div class="w-1/4">
+              <label class="block mb-1">Efficiency</label>
+              <select id="efficiency${i}" class="w-full p-2 bg-gray-700 text-white rounded-lg" onchange="saveData(${i})">
+                <option value="0">0</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+          </div>
+        `;
+      }
+      return html;
+    }
+
+    function toggleBlock(blockId) {
+      const block = document.getElementById(blockId);
+      block.classList.toggle('hidden');
+    }
+
+    function saveData(hour) {
+      const task = document.getElementById(`task${hour}`).value;
+      const efficiency = document.getElementById(`efficiency${hour}`).value;
+      const savedData = JSON.parse(localStorage.getItem(currentDateKey)) || {};
+      savedData[hour] = { task, efficiency };
+      localStorage.setItem(currentDateKey, JSON.stringify(savedData));
+    }
+
+    function calculateEfficiency() {
+      let totalScore = 0;
+      let hoursSubmitted = 0;
+      const savedData = JSON.parse(localStorage.getItem(currentDateKey)) || {};
+
+      for (let i = 1; i <= 24; i++) {
+        const efficiencyValue = savedData[i] ? parseInt(savedData[i].efficiency) : 0;
+        if (efficiencyValue > 0) {
+          totalScore += efficiencyValue;
+          hoursSubmitted++;
+        }
+      }
+
+      const efficiencyPercentage = hoursSubmitted ? (totalScore / (hoursSubmitted * 10)) * 100 : 0;
+      document.getElementById('efficiencyScore').textContent = `${efficiencyPercentage.toFixed(2)}%`;
+      document.getElementById('progressBar').style.width = `${efficiencyPercentage}%`;
+    }
+
+    function loadSavedData() {
+      const savedData = JSON.parse(localStorage.getItem(currentDateKey)) || {};
+      for (let i = 1; i <= 24; i++) {
+        if (savedData[i]) {
+          document.getElementById(`task${i}`).value = savedData[i].task || '';
+          document.getElementById(`efficiency${i}`).value = savedData[i].efficiency || '0';
+        }
+      }
+    }
+
+    datePicker.addEventListener('change', function () {
+      const selectedDate = datePicker.value;
+      document.getElementById('currentDate').textContent = formatDate(selectedDate);
+      currentDateKey = selectedDate;
+      generateTaskBlocks();
+    });
+
+    window.onload = function () {
+      setDefaultDate();
+      generateTaskBlocks();
+    };
+
+    // Function to render the progress chart on the Progress page
+    function renderProgressChart() {
+      const allData = getAllStoredData();
+      const labels = Object.keys(allData); // All dates as labels for the x-axis
+      const data = Object.values(allData); // Efficiency scores for y-axis
+
+      const ctx = document.getElementById('progressChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Efficiency Progress',
+              data: data,
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              stepSize: 10,
+            },
+          },
+        },
+      });
+    }
+
+    // Get all stored data and calculate efficiency for each date
+    function getAllStoredData() {
+      const allKeys = Object.keys(localStorage);
+      const dataMap = {};
+
+      allKeys.forEach((key) => {
+        let totalScore = 0;
+        let hoursSubmitted = 0;
+        const savedData = JSON.parse(localStorage.getItem(key)) || {};
+
+        for (let i = 1; i <= 24; i++) {
+          const efficiencyValue = savedData[i] ? parseInt(savedData[i].efficiency) : 0;
+          if (efficiencyValue > 0) {
+            totalScore += efficiencyValue;
+            hoursSubmitted++;
+          }
+        }
+
+        const efficiencyPercentage = hoursSubmitted ? (totalScore / (hoursSubmitted * 10)) * 100 : 0;
+        dataMap[key] = efficiencyPercentage;
+      });
+
+      return dataMap;
+    }
+  </script>
+</body>
+</html>
