@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Checklist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Navbar -->
+  <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between">
+      <div class="text-xl font-bold">Day Tracker</div>
+      <div>
+        <a href="index.html" class="text-white px-4">Home</a>
+        <a href="dsa-checklist.html" class="text-white px-4">DSA Checklist</a>
+        <a href="progress.html" class="text-white px-4">Progress</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- DSA Checklist Content -->
+  <div class="container mx-auto my-4">
+    <h2 class="text-2xl font-semibold mb-4">DSA Interview Questions Checklist</h2>
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+      <table class="w-full table-auto">
+        <thead>
+          <tr>
+            <th class="px-2 py-2">Question</th>
+            <th class="px-2 py-2">Completed</th>
+            <th class="px-2 py-2">Revised</th>
+            <th class="px-2 py-2">Important</th>
+          </tr>
+        </thead>
+        <tbody id="questionsTable">
+          <!-- Questions will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // List of DSA questions categorized
+    const dsaQuestions = [
+      {
+        category: "Arrays",
+        questions: [
+          "Reverse array",
+          "Find missing number",
+          "Maximum subarray sum",
+          "Merge two sorted arrays",
+          "Find duplicates",
+          "Sort array of 0s, 1s, and 2s",
+          "Find pair with given sum",
+          "Maximum consecutive sum",
+          "Find first repeating element",
+          "Minimum platform required"
+        ]
+      },
+      {
+        category: "Linked Lists",
+        questions: [
+          "Reverse linked list",
+          "Detect cycle",
+          "Find middle element",
+          "Remove duplicates",
+          "Intersection of two linked lists",
+          "Merge two sorted linked lists",
+          "Delete node",
+          "Find nth node from end",
+          "Check palindrome",
+          "Flatten linked list"
+        ]
+      },
+      {
+        category: "Stacks and Queues",
+        questions: [
+          "Implement stack using array",
+          "Implement queue using linked list",
+          "Evaluate postfix expression",
+          "Check balanced parentheses",
+          "Implement min stack",
+          "Reverse stack using recursion",
+          "Find first non-repeating character",
+          "Check if stack is sorted",
+          "Implement queue using two stacks",
+          "Reverse queue"
+        ]
+      },
+      {
+        category: "Trees",
+        questions: [
+          "Traverse tree (inorder, preorder, postorder)",
+          "Find height of tree",
+          "Check if tree is balanced",
+          "Find lowest common ancestor",
+          "Construct tree from inorder and preorder",
+          "Delete node in binary search tree",
+          "Find kth smallest element",
+          "Check if tree is BST",
+          "Find maximum width",
+          "Find diameter of tree"
+        ]
+      },
+      {
+        category: "Graphs",
+        questions: [
+          "Traverse graph (DFS, BFS)",
+          "Check if graph is connected",
+          "Find shortest path (Dijkstra, Bellman-Ford)",
+          "Detect cycle",
+          "Topological sorting",
+          "Find strongly connected components",
+          "Minimum spanning tree (Kruskal, Prim)",
+          "Check if graph is bipartite",
+          "Find maximum flow",
+          "Find minimum cut"
+        ]
+      },
+      {
+        category: "Dynamic Programming",
+        questions: [
+          "Fibonacci series",
+          "Longest common subsequence",
+          "Shortest path in grid",
+          "Minimum jumps to reach end",
+          "Longest increasing subsequence",
+          "Maximum sum subsequence",
+          "Coin change problem",
+          "Knapsack problem",
+          "Edit distance",
+          "Matrix chain multiplication"
+        ]
+      },
+      {
+        category: "Sorting and Searching",
+        questions: [
+          "Bubble sort",
+          "Selection sort",
+          "Insertion sort",
+          "Merge sort",
+          "Quick sort",
+          "Heap sort",
+          "Radix sort",
+          "Binary search",
+          "Linear search",
+          "Hashing"
+        ]
+      },
+      {
+        category: "Bit Manipulation",
+        questions: [
+          "Check if number is power of 2",
+          "Count set bits",
+          "Check if number is palindrome",
+          "Find first set bit",
+          "Clear least significant bit",
+          "Set kth bit",
+          "Clear kth bit",
+          "Toggle kth bit",
+          "Check if two numbers are equal",
+          "Find bitwise AND of two numbers"
+        ]
+      },
+      {
+        category: "Miscellaneous",
+        questions: [
+          "Check if string is palindrome",
+          "Find first non-repeating character",
+          "Check if two strings are anagrams",
+          "Find longest common prefix",
+          "Check if number is prime",
+          "Find factorial",
+          "Check if array is sorted",
+          "Find maximum subarray sum",
+          "Check if string contains only digits",
+          "Find length of longest consecutive sequence"
+        ]
+      },
+      {
+        category: "Behavioral Questions",
+        questions: [
+          "Tell me about a project you worked on.",
+          "Why do you want to work here?",
+          "How do you handle conflicts?",
+          "Can you explain a technical concept?",
+          "Describe your problem-solving process.",
+          "How do you prioritize tasks?",
+          "Tell me about a difficult bug you fixed.",
+          "Can you walk me through your design process?",
+          "How do you stay current with industry developments?",
+          "Can you describe a time when you worked with a team?"
+        ]
+      }
+    ];
+
+    // Function to load questions into the table
+    function loadQuestions() {
+      const tableBody = document.getElementById('questionsTable');
+      tableBody.innerHTML = ''; // Clear existing content
+
+      dsaQuestions.forEach((section, sectionIndex) => {
+        // Add category header
+        const categoryRow = document.createElement('tr');
+        categoryRow.innerHTML = `
+          <td colspan="4" class="bg-gray-700 px-2 py-2 font-bold">${section.category}</td>
+        `;
+        tableBody.appendChild(categoryRow);
+
+        section.questions.forEach((question, questionIndex) => {
+          const uniqueId = `q${sectionIndex}-${questionIndex}`;
+          const savedState = JSON.parse(localStorage.getItem(uniqueId)) || {
+            completed: false,
+            revised: false,
+            important: false
+          };
+
+          const row = document.createElement('tr');
+          row.classList.add('border-b', 'border-gray-700');
+          row.innerHTML = `
+            <td class="px-2 py-2">${question}</td>
+            <td class="px-2 py-2 text-center">
+              <input type="checkbox" id="${uniqueId}-completed" ${savedState.completed ? 'checked' : ''} onclick="saveCheckboxState('${uniqueId}')">
+            </td>
+            <td class="px-2 py-2 text-center">
+              <input type="checkbox" id="${uniqueId}-revised" ${savedState.revised ? 'checked' : ''} onclick="saveCheckboxState('${uniqueId}')">
+            </td>
+            <td class="px-2 py-2 text-center">
+              <input type="checkbox" id="${uniqueId}-important" ${savedState.important ? 'checked' : ''} onclick="saveCheckboxState('${uniqueId}')">
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      });
+    }
+
+    // Function to save checkbox state to localStorage
+    function saveCheckboxState(uniqueId) {
+      const completed = document.getElementById(`${uniqueId}-completed`).checked;
+      const revised = document.getElementById(`${uniqueId}-revised`).checked;
+      const important = document.getElementById(`${uniqueId}-important`).checked;
+
+      const state = { completed, revised, important };
+      localStorage.setItem(uniqueId, JSON.stringify(state));
+    }
+
+    // Load questions on page load
+    window.onload = function() {
+      loadQuestions();
+    };
+  </script>
+</body>
+</html>
