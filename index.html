@@ -14,6 +14,8 @@
       <div class="text-xl font-bold">Day Tracker</div>
       <div>
         <a href="index.html" class="text-white px-4">Home</a>
+        <a href="dsa-checklist.html" class="text-white px-4">DSA Checklist</a> <!-- Added Route -->
+        <a href="progress.html" class="text-white px-4">Progress</a>
       </div>
     </div>
   </nav>
@@ -64,6 +66,10 @@
       dayTrackerContent.classList.add('hidden');
       progressContent.classList.remove('hidden');
       renderProgressChart();
+    } else if (pathname.includes('dsa-checklist.html')) {
+      dayTrackerContent.classList.add('hidden');
+      progressContent.classList.add('hidden');
+      // The DSA Checklist page will be loaded separately
     } else {
       dayTrackerContent.classList.remove('hidden');
       progressContent.classList.add('hidden');
