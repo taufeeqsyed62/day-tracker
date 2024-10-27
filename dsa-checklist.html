@@ -42,6 +42,7 @@
             <th class="px-2 py-2">Completed</th>
             <th class="px-2 py-2">Revised</th>
             <th class="px-2 py-2">Important</th>
+            <th class="px-2 py-2">Notes</th>
           </tr>
         </thead>
         <tbody id="questionsTable">
@@ -215,7 +216,7 @@
         // Add category header
         const categoryRow = document.createElement('tr');
         categoryRow.innerHTML = `
-          <td colspan="4" class="bg-gray-700 px-2 py-2 font-bold">${section.category}</td>
+          <td colspan="5" class="bg-gray-700 px-2 py-2 font-bold">${section.category}</td>
         `;
         tableBody.appendChild(categoryRow);
 
@@ -224,7 +225,8 @@
           const savedState = JSON.parse(localStorage.getItem(uniqueId)) || {
             completed: false,
             revised: false,
-            important: false
+            important: false,
+            notes: ''
           };
 
           const row = document.createElement('tr');
@@ -232,13 +234,16 @@
           row.innerHTML = `
             <td class="px-2 py-2">${question}</td>
             <td class="px-2 py-2 text-center">
-              <input type="checkbox" id="${uniqueId}-completed" ${savedState.completed ? 'checked' : ''} onclick="saveCheckboxState('${uniqueId}')">
+              <input type="checkbox" id="${uniqueId}-completed" ${savedState.completed ? 'checked' : ''} onclick="saveState('${uniqueId}')">
             </td>
             <td class="px-2 py-2 text-center">
-              <input type="checkbox" id="${uniqueId}-revised" ${savedState.revised ? 'checked' : ''} onclick="saveCheckboxState('${uniqueId}')">
+              <input type="checkbox" id="${uniqueId}-revised" ${savedState.revised ? 'checked' : ''} onclick="saveState('${uniqueId}')">
             </td>
             <td class="px-2 py-2 text-center">
-              <input type="checkbox" id="${uniqueId}-important" ${savedState.important ? 'checked' : ''} onclick="saveCheckboxState('${uniqueId}')">
+              <input type="checkbox" id="${uniqueId}-important" ${savedState.important ? 'checked' : ''} onclick="saveState('${uniqueId}')">
+            </td>
+            <td class="px-2 py-2">
+              <input type="text" id="${uniqueId}-notes" value="${savedState.notes}" placeholder="Add notes..." class="bg-gray-800 border border-gray-600 rounded w-full px-2 py-1 text-white" oninput="saveState('${uniqueId}')">
             </td>
           `;
           tableBody.appendChild(row);
@@ -249,13 +254,14 @@
       updateProgressBar();
     }
 
-    // Function to save checkbox state to localStorage
-    function saveCheckboxState(uniqueId) {
+    // Function to save state to localStorage
+    function saveState(uniqueId) {
       const completed = document.getElementById(`${uniqueId}-completed`).checked;
       const revised = document.getElementById(`${uniqueId}-revised`).checked;
       const important = document.getElementById(`${uniqueId}-important`).checked;
+      const notes = document.getElementById(`${uniqueId}-notes`).value;
 
-      const state = { completed, revised, important };
+      const state = { completed, revised, important, notes };
       localStorage.setItem(uniqueId, JSON.stringify(state));
 
       // Update the progress bar after saving state
@@ -274,7 +280,8 @@
           const savedState = JSON.parse(localStorage.getItem(uniqueId)) || {
             completed: false,
             revised: false,
-            important: false
+            important: false,
+            notes: ''
           };
           if (savedState.completed) {
             completedQuestions++;
