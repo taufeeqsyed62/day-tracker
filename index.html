@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Day Tracker</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-900 text-white">
   <!-- Navbar -->
@@ -14,13 +14,13 @@
       <div class="text-xl font-bold">Day Tracker</div>
       <div>
         <a href="index.html" class="text-white px-4">Home</a>
-        <a href="dsa-checklist.html" class="text-white px-4">DSA Checklist</a> <!-- Added Route -->
+        <a href="dsa-checklist.html" class="text-white px-4">DSA Checklist</a>
         <a href="progress.html" class="text-white px-4">Progress</a>
       </div>
     </div>
   </nav>
 
-  <!-- Main Content (Dynamically Changes Based on Page) -->
+  <!-- Main Content -->
   <div id="content"></div>
 
   <!-- Home Page (Day Tracker) -->
@@ -57,7 +57,6 @@
   </div>
 
   <script>
-    // Page Navigation and Routing
     const dayTrackerContent = document.getElementById('day-tracker-content');
     const progressContent = document.getElementById('progress-content');
 
@@ -69,7 +68,6 @@
     } else if (pathname.includes('dsa-checklist.html')) {
       dayTrackerContent.classList.add('hidden');
       progressContent.classList.add('hidden');
-      // The DSA Checklist page will be loaded separately
     } else {
       dayTrackerContent.classList.remove('hidden');
       progressContent.classList.add('hidden');
@@ -79,7 +77,6 @@
     const tasksContainer = document.getElementById('taskBlocks');
     let currentDateKey;
 
-    // Set default date in the calendar to today's date
     function setDefaultDate() {
       const today = new Date().toISOString().split('T')[0];
       datePicker.value = today;
@@ -93,7 +90,6 @@
       return date.toLocaleDateString('en-IN', dateOptions);
     }
 
-    // Generate task fields in blocks of 6 hours
     function generateTaskBlocks() {
       tasksContainer.innerHTML = '';
       const hourBlocks = [
@@ -127,6 +123,12 @@
       let html = '';
       for (let i = startHour; i <= endHour; i++) {
         const hourLabel = i <= 12 ? `${i} AM` : `${i - 12} PM`;
+        let options = '';
+
+        for (let j = 0; j <= 10; j++) {
+          options += `<option value="${j}">${j}</option>`;
+        }
+
         html += `
           <div class="mb-4 flex items-center justify-between">
             <div class="w-1/2">
@@ -136,12 +138,7 @@
             <div class="w-1/4">
               <label class="block mb-1">Efficiency</label>
               <select id="efficiency${i}" class="w-full p-2 bg-gray-700 text-white rounded-lg" onchange="saveData(${i})">
-                <option value="0">0</option>
-                <option value="2">2</option>
-                <option value="4">4</option>
-                <option value="6">6</option>
-                <option value="8">8</option>
-                <option value="10">10</option>
+                ${options}
               </select>
             </div>
           </div>
@@ -203,11 +200,10 @@
       generateTaskBlocks();
     };
 
-    // Function to render the progress chart on the Progress page
     function renderProgressChart() {
       const allData = getAllStoredData();
-      const labels = Object.keys(allData); // All dates as labels for the x-axis
-      const data = Object.values(allData); // Efficiency scores for y-axis
+      const labels = Object.keys(allData);
+      const data = Object.values(allData);
 
       const ctx = document.getElementById('progressChart').getContext('2d');
       new Chart(ctx, {
@@ -236,7 +232,6 @@
       });
     }
 
-    // Get all stored data and calculate efficiency for each date
     function getAllStoredData() {
       const allKeys = Object.keys(localStorage);
       const dataMap = {};
