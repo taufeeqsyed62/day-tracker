@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do Tasks</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Navbar -->
+  <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between">
+      <div class="text-xl font-bold">Day Tracker</div>
+      <div>
+        <a href="index.html" class="text-white px-4">Home</a>
+        <a href="dsa-checklist.html" class="text-white px-4">DSA Checklist</a>
+        <a href="progress.html" class="text-white px-4">Progress</a>
+        <a href="todo-tasks.html" class="text-white px-4">To-Do Tasks</a>
+      </div>
+    </div>
+  </nav>
 
+  <!-- To-Do Tasks Content -->
+  <div class="container mx-auto my-8">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+      <h2 class="text-2xl font-semibold mb-4">To-Do Tasks</h2>
+
+      <!-- Task Input -->
+      <div class="flex items-center mb-4">
+        <input
+          id="newTaskInput"
+          type="text"
+          placeholder="Enter your task here..."
+          class="flex-1 p-2 bg-gray-700 text-white rounded-lg focus:outline-none"
+        />
+        <button
+          onclick="addTask()"
+          class="ml-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+        >
+          Add Task
+        </button>
+      </div>
+
+      <!-- Task List -->
+      <ul id="taskList" class="space-y-2"></ul>
+    </div>
+  </div>
+
+  <script>
+    const taskList = document.getElementById("taskList");
+
+    function addTask() {
+      const taskInput = document.getElementById("newTaskInput");
+      const taskText = taskInput.value.trim();
+
+      if (taskText) {
+        const taskItem = document.createElement("li");
+        taskItem.className =
+          "flex items-center justify-between bg-gray-700 p-3 rounded-lg";
+
+        // Task Content
+        const taskLabel = document.createElement("label");
+        taskLabel.className =
+          "flex items-center flex-grow cursor-pointer transition duration-300";
+        taskLabel.innerHTML = `
+          <input type="checkbox" class="mr-4 h-5 w-5 accent-green-500" onchange="toggleTaskCompletion(this)" />
+          <span class="task-text">${taskText}</span>
+        `;
+
+        // Add the task to the list
+        taskItem.appendChild(taskLabel);
+        taskList.appendChild(taskItem);
+
+        // Clear input
+        taskInput.value = "";
+      }
+    }
+
+    function toggleTaskCompletion(checkbox) {
+      const taskText = checkbox.nextElementSibling;
+
+      // Strike-through with animation
+      if (checkbox.checked) {
+        taskText.style.textDecoration = "line-through";
+        taskText.style.color = "gray";
+      } else {
+        taskText.style.textDecoration = "none";
+        taskText.style.color = "white";
+      }
+    }
+  </script>
+</body>
+</html>
