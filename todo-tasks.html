@@ -25,6 +25,17 @@
     <div class="bg-gray-800 p-6 rounded-lg shadow-md">
       <h2 class="text-2xl font-semibold mb-4">To-Do Tasks</h2>
 
+      <!-- Date Picker -->
+      <div class="mb-4">
+        <label for="taskDate" class="block mb-2 font-semibold">Select Date:</label>
+        <input
+          type="date"
+          id="taskDate"
+          class="p-2 bg-gray-700 text-white rounded-lg focus:outline-none"
+          onchange="loadTasksForDate()"
+        />
+      </div>
+
       <!-- Task Input -->
       <div class="flex items-center mb-4">
         <input
@@ -48,46 +59,88 @@
 
   <script>
     const taskList = document.getElementById("taskList");
+    const taskDate = document.getElementById("taskDate");
 
+    // Set default date to today
+    const today = new Date().toISOString().split("T")[0];
+    taskDate.value = today;
+
+    // Load tasks for the selected date
+    function loadTasksForDate() {
+      const selectedDate = taskDate.value;
+      const tasks = JSON.parse(localStorage.getItem(selectedDate)) || [];
+      taskList.innerHTML = "";
+
+      tasks.forEach((task) => {
+        const taskItem = createTaskElement(task.text, task.completed);
+        taskList.appendChild(taskItem);
+      });
+    }
+
+    // Add a new task
     function addTask() {
       const taskInput = document.getElementById("newTaskInput");
       const taskText = taskInput.value.trim();
+      const selectedDate = taskDate.value;
 
       if (taskText) {
-        const taskItem = document.createElement("li");
-        taskItem.className =
-          "flex items-center justify-between bg-gray-700 p-3 rounded-lg";
-
-        // Task Content
-        const taskLabel = document.createElement("label");
-        taskLabel.className =
-          "flex items-center flex-grow cursor-pointer transition duration-300";
-        taskLabel.innerHTML = `
-          <input type="checkbox" class="mr-4 h-5 w-5 accent-green-500" onchange="toggleTaskCompletion(this)" />
-          <span class="task-text">${taskText}</span>
-        `;
-
-        // Add the task to the list
-        taskItem.appendChild(taskLabel);
+        const taskItem = createTaskElement(taskText, false);
         taskList.appendChild(taskItem);
+
+        // Save task to localStorage
+        const tasks = JSON.parse(localStorage.getItem(selectedDate)) || [];
+        tasks.push({ text: taskText, completed: false });
+        localStorage.setItem(selectedDate, JSON.stringify(tasks));
 
         // Clear input
         taskInput.value = "";
       }
     }
 
+    // Create a task element
+    function createTaskElement(taskText, completed) {
+      const taskItem = document.createElement("li");
+      taskItem.className =
+        "flex items-center justify-between bg-gray-700 p-3 rounded-lg";
+
+      // Task Content
+      const taskLabel = document.createElement("label");
+      taskLabel.className =
+        "flex items-center flex-grow cursor-pointer transition duration-300";
+      taskLabel.innerHTML = `
+        <input type="checkbox" class="mr-4 h-5 w-5 accent-green-500" ${completed ? "checked" : ""} onchange="toggleTaskCompletion(this)" />
+        <span class="task-text ${completed ? "line-through text-gray-400" : ""}">${taskText}</span>
+      `;
+
+      taskItem.appendChild(taskLabel);
+      return taskItem;
+    }
+
+    // Toggle task completion
     function toggleTaskCompletion(checkbox) {
       const taskText = checkbox.nextElementSibling;
+      const selectedDate = taskDate.value;
 
-      // Strike-through with animation
+      // Update task style
       if (checkbox.checked) {
-        taskText.style.textDecoration = "line-through";
-        taskText.style.color = "gray";
+        taskText.classList.add("line-through", "text-gray-400");
       } else {
-        taskText.style.textDecoration = "none";
-        taskText.style.color = "white";
+        taskText.classList.remove("line-through", "text-gray-400");
+      }
+
+      // Update localStorage
+      const tasks = JSON.parse(localStorage.getItem(selectedDate)) || [];
+      const taskIndex = Array.from(taskList.children).indexOf(checkbox.closest("li"));
+      if (taskIndex > -1) {
+        tasks[taskIndex].completed = checkbox.checked;
+        localStorage.setItem(selectedDate, JSON.stringify(tasks));
       }
     }
+
+    // Load tasks for today on page load
+    window.onload = loadTasksForDate;
   </script>
 </body>
 </html>
+
+
