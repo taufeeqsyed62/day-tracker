@@ -16,15 +16,20 @@
         <a href="dsa-checklist.html" class="text-white px-4">DSA Checklist</a>
         <a href="progress.html" class="text-white px-4">Progress</a>
         <a href="todo-tasks.html" class="text-white px-4">To-Do Tasks</a>
-        <a href="expense.html" class="text-white px-4">Expense</a> <!-- New expense link -->
+        <a href="expense.html" class="text-white px-4">Expense</a> <!-- Expense link -->
       </div>
     </div>
   </nav>
 
   <!-- Expense Page -->
   <div id="expense-content" class="container mx-auto my-4">
+    <!-- Total Balance Display -->
     <div class="bg-gray-800 p-4 rounded-lg shadow-md">
       <h2 class="text-lg font-semibold">Total Balance: <span id="totalBalance">0</span> USD</h2>
+    </div>
+
+    <!-- Add/Subtract Money Form -->
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md mt-4">
       <div class="my-4">
         <label for="amount" class="block text-sm font-medium">Amount</label>
         <input type="number" id="amount" class="mt-1 p-2 bg-gray-700 text-white rounded-lg" placeholder="Enter amount" />
@@ -38,6 +43,8 @@
         <button onclick="subtractMoney()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full">Subtract Money</button>
       </div>
     </div>
+
+    <!-- Transaction History -->
     <div class="bg-gray-800 p-4 rounded-lg shadow-md mt-4">
       <h2 class="text-lg font-semibold mb-4">Transaction History</h2>
       <div id="transactionHistory" class="space-y-2"></div>
@@ -68,7 +75,7 @@
     function subtractMoney() {
       const amount = parseFloat(document.getElementById('amount').value);
       const reason = document.getElementById('reason').value;
-      if (isNaN(amount) || amount <= 0 || amount > totalBalance) {
+      if (isNaN(amount) || amount <= 0) {
         alert('Please enter a valid amount to subtract.');
         return;
       }
@@ -115,4 +122,3 @@
   </script>
 </body>
 </html>
-
