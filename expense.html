@@ -99,16 +99,37 @@
       renderTransactionHistory();
     }
 
+    function deleteTransaction(index) {
+      const transactionHistory = JSON.parse(localStorage.getItem('transactionHistory')) || [];
+      const transaction = transactionHistory[index];
+
+      // Adjust the balance based on whether it's an addition or subtraction
+      if (transaction.type === 'Added') {
+        totalBalance -= parseFloat(transaction.amount);
+      } else if (transaction.type === 'Subtracted') {
+        totalBalance += parseFloat(transaction.amount);
+      }
+
+      transactionHistory.splice(index, 1); // Remove the transaction
+      localStorage.setItem('transactionHistory', JSON.stringify(transactionHistory));
+      updateBalance();
+      renderTransactionHistory();
+    }
+
     function renderTransactionHistory() {
       const transactionHistory = JSON.parse(localStorage.getItem('transactionHistory')) || [];
       const historyContainer = document.getElementById('transactionHistory');
       historyContainer.innerHTML = '';
-      transactionHistory.forEach(transaction => {
+
+      transactionHistory.forEach((transaction, index) => {
         const transactionHtml = `
-          <div class="bg-gray-700 p-4 rounded-lg">
-            <p><strong>${transaction.type}:</strong> $${transaction.amount}</p>
-            <p><strong>Date:</strong> ${transaction.date}</p>
-            <p><strong>Reason:</strong> ${transaction.reason}</p>
+          <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
+            <div>
+              <p><strong>${transaction.type}:</strong> $${transaction.amount}</p>
+              <p><strong>Date:</strong> ${transaction.date}</p>
+              <p><strong>Reason:</strong> ${transaction.reason}</p>
+            </div>
+            <button onclick="deleteTransaction(${index})" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
           </div>
         `;
         historyContainer.innerHTML += transactionHtml;
