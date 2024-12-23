@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Navbar -->
+  <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between">
+      <div class="text-xl font-bold">Day Tracker</div>
+      <div>
+        <a href="index.html" class="text-white px-4">Home</a>
+        <a href="dsa-checklist.html" class="text-white px-4">DSA Checklist</a>
+        <a href="progress.html" class="text-white px-4">Progress</a>
+        <a href="todo-tasks.html" class="text-white px-4">To-Do Tasks</a>
+        <a href="expense.html" class="text-white px-4">Expense</a> <!-- New expense link -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Expense Page -->
+  <div id="expense-content" class="container mx-auto my-4">
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+      <h2 class="text-lg font-semibold">Total Balance: <span id="totalBalance">0</span> USD</h2>
+      <div class="my-4">
+        <label for="amount" class="block text-sm font-medium">Amount</label>
+        <input type="number" id="amount" class="mt-1 p-2 bg-gray-700 text-white rounded-lg" placeholder="Enter amount" />
+      </div>
+      <div class="my-4">
+        <label for="reason" class="block text-sm font-medium">Reason (Optional)</label>
+        <input type="text" id="reason" class="mt-1 p-2 bg-gray-700 text-white rounded-lg" placeholder="Enter reason" />
+      </div>
+      <div class="flex space-x-4">
+        <button onclick="addMoney()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 w-full">Add Money</button>
+        <button onclick="subtractMoney()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full">Subtract Money</button>
+      </div>
+    </div>
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md mt-4">
+      <h2 class="text-lg font-semibold mb-4">Transaction History</h2>
+      <div id="transactionHistory" class="space-y-2"></div>
+    </div>
+  </div>
+
+  <script>
+    let totalBalance = 0;
+
+    function updateBalance() {
+      document.getElementById('totalBalance').textContent = totalBalance.toFixed(2);
+    }
+
+    function addMoney() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const reason = document.getElementById('reason').value;
+      if (isNaN(amount) || amount <= 0) {
+        alert('Please enter a valid amount.');
+        return;
+      }
+      totalBalance += amount;
+      saveTransaction('Added', amount, reason);
+      updateBalance();
+      document.getElementById('amount').value = '';
+      document.getElementById('reason').value = '';
+    }
+
+    function subtractMoney() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const reason = document.getElementById('reason').value;
+      if (isNaN(amount) || amount <= 0 || amount > totalBalance) {
+        alert('Please enter a valid amount to subtract.');
+        return;
+      }
+      totalBalance -= amount;
+      saveTransaction('Subtracted', amount, reason);
+      updateBalance();
+      document.getElementById('amount').value = '';
+      document.getElementById('reason').value = '';
+    }
+
+    function saveTransaction(type, amount, reason) {
+      const transactionHistory = JSON.parse(localStorage.getItem('transactionHistory')) || [];
+      const transaction = {
+        type: type,
+        amount: amount.toFixed(2),
+        reason: reason || 'No reason provided',
+        date: new Date().toLocaleString(),
+      };
+      transactionHistory.push(transaction);
+      localStorage.setItem('transactionHistory', JSON.stringify(transactionHistory));
+      renderTransactionHistory();
+    }
+
+    function renderTransactionHistory() {
+      const transactionHistory = JSON.parse(localStorage.getItem('transactionHistory')) || [];
+      const historyContainer = document.getElementById('transactionHistory');
+      historyContainer.innerHTML = '';
+      transactionHistory.forEach(transaction => {
+        const transactionHtml = `
+          <div class="bg-gray-700 p-4 rounded-lg">
+            <p><strong>${transaction.type}:</strong> $${transaction.amount}</p>
+            <p><strong>Date:</strong> ${transaction.date}</p>
+            <p><strong>Reason:</strong> ${transaction.reason}</p>
+          </div>
+        `;
+        historyContainer.innerHTML += transactionHtml;
+      });
+    }
+
+    window.onload = function () {
+      updateBalance();
+      renderTransactionHistory();
+    };
+  </script>
+</body>
+</html>
+
