@@ -54,10 +54,12 @@
   <script>
     let totalBalance = 0;
 
+    // Function to update the displayed total balance
     function updateBalance() {
       document.getElementById('totalBalance').textContent = totalBalance.toFixed(2);
     }
 
+    // Function to add money to the total balance
     function addMoney() {
       const amount = parseFloat(document.getElementById('amount').value);
       const reason = document.getElementById('reason').value;
@@ -72,6 +74,7 @@
       document.getElementById('reason').value = '';
     }
 
+    // Function to subtract money from the total balance
     function subtractMoney() {
       const amount = parseFloat(document.getElementById('amount').value);
       const reason = document.getElementById('reason').value;
@@ -86,6 +89,7 @@
       document.getElementById('reason').value = '';
     }
 
+    // Function to save transaction to localStorage
     function saveTransaction(type, amount, reason) {
       const transactionHistory = JSON.parse(localStorage.getItem('transactionHistory')) || [];
       const transaction = {
@@ -99,23 +103,30 @@
       renderTransactionHistory();
     }
 
+    // Function to delete a transaction and update the balance
     function deleteTransaction(index) {
       const transactionHistory = JSON.parse(localStorage.getItem('transactionHistory')) || [];
       const transaction = transactionHistory[index];
 
-      // Adjust the balance based on whether it's an addition or subtraction
+      // Adjust the total balance based on the transaction type (Added/Subtracted)
       if (transaction.type === 'Added') {
         totalBalance -= parseFloat(transaction.amount);
       } else if (transaction.type === 'Subtracted') {
         totalBalance += parseFloat(transaction.amount);
       }
 
-      transactionHistory.splice(index, 1); // Remove the transaction
+      // Remove the transaction from the history
+      transactionHistory.splice(index, 1);
       localStorage.setItem('transactionHistory', JSON.stringify(transactionHistory));
+      
+      // Recalculate and update the balance
       updateBalance();
+      
+      // Re-render the transaction history
       renderTransactionHistory();
     }
 
+    // Function to render the transaction history
     function renderTransactionHistory() {
       const transactionHistory = JSON.parse(localStorage.getItem('transactionHistory')) || [];
       const historyContainer = document.getElementById('transactionHistory');
@@ -136,9 +147,14 @@
       });
     }
 
+    // On page load, update the balance and render transaction history
     window.onload = function () {
-      updateBalance();
       renderTransactionHistory();
+      const transactionHistory = JSON.parse(localStorage.getItem('transactionHistory')) || [];
+      totalBalance = transactionHistory.reduce((acc, transaction) => {
+        return transaction.type === 'Added' ? acc + parseFloat(transaction.amount) : acc - parseFloat(transaction.amount);
+      }, 0);
+      updateBalance();
     };
   </script>
 </body>
