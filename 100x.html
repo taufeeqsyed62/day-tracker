@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>100x - Daily Learning Points</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Navbar -->
+  <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between">
+      <div class="text-xl font-bold">Day Tracker</div>
+      <div>
+        <a href="index.html" class="text-white px-4">Home</a>
+        <a href="dsa-checklist.html" class="text-white px-4">DSA Checklist</a>
+        <a href="progress.html" class="text-white px-4">Progress</a>
+        <a href="todo-tasks.html" class="text-white px-4">To-Do Tasks</a>
+        <a href="expense.html" class="text-white px-4">Expense</a>
+        <a href="100x.html" class="text-white px-4">100x</a> <!-- New link to 100x page -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- 100x Page -->
+  <div class="container mx-auto my-4">
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+      <h2 class="text-lg font-semibold">Daily Learning Points</h2>
+      <div class="my-4">
+        <label for="learningPoints" class="block text-sm font-medium">Add Learning Points</label>
+        <textarea id="learningPoints" class="mt-1 p-2 bg-gray-700 text-white rounded-lg w-full" rows="4" placeholder="Enter your daily learning points..."></textarea>
+      </div>
+      <button onclick="saveLearningPoints()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-full">Save Learning Points</button>
+    </div>
+
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md mt-4">
+      <h2 class="text-lg font-semibold mb-4">Previous Learning Points</h2>
+      <div id="learningHistory" class="space-y-2"></div>
+    </div>
+  </div>
+
+  <script>
+    function saveLearningPoints() {
+      const points = document.getElementById('learningPoints').value;
+      if (points.trim() === '') {
+        alert('Please enter your learning points.');
+        return;
+      }
+
+      const learningHistory = JSON.parse(localStorage.getItem('learningHistory')) || [];
+      const today = new Date().toLocaleDateString();
+
+      const learningData = {
+        date: today,
+        points: points,
+      };
+
+      learningHistory.push(learningData);
+      localStorage.setItem('learningHistory', JSON.stringify(learningHistory));
+
+      renderLearningHistory();
+      document.getElementById('learningPoints').value = ''; // Clear textarea
+    }
+
+    function renderLearningHistory() {
+      const learningHistory = JSON.parse(localStorage.getItem('learningHistory')) || [];
+      const historyContainer = document.getElementById('learningHistory');
+      historyContainer.innerHTML = '';
+
+      learningHistory.forEach(entry => {
+        const historyHtml = `
+          <div class="bg-gray-700 p-4 rounded-lg">
+            <p><strong>Date:</strong> ${entry.date}</p>
+            <p><strong>Learning Points:</strong></p>
+            <p>${entry.points}</p>
+          </div>
+        `;
+        historyContainer.innerHTML += historyHtml;
+      });
+    }
+
+    window.onload = function () {
+      renderLearningHistory();
+    };
+  </script>
+</body>
+</html>
+
