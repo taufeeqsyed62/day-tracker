@@ -48,10 +48,8 @@
       }
 
       const learningHistory = JSON.parse(localStorage.getItem('learningHistory')) || [];
-      const today = new Date().toLocaleDateString();
-
+      
       const learningData = {
-        date: today,
         points: points,
       };
 
@@ -70,9 +68,7 @@
       learningHistory.forEach(entry => {
         const historyHtml = `
           <div class="bg-gray-700 p-4 rounded-lg">
-            <p><strong>Date:</strong> ${entry.date}</p>
-            <p><strong>Learning Points:</strong></p>
-            <p>${entry.points}</p>
+            <p><strong>${entry.points}</strong></p>
           </div>
         `;
         historyContainer.innerHTML += historyHtml;
@@ -85,4 +81,3 @@
   </script>
 </body>
 </html>
-
