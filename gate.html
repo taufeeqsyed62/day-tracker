@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS Topics Checklist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Navbar -->
+  <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between">
+      <div class="text-xl font-bold">CS Topics Checklist</div>
+    </div>
+  </nav>
+
+  <!-- Checklist Content -->
+  <div class="container mx-auto my-4">
+    <h2 class="text-2xl font-semibold mb-4">Computer Science Topics Checklist</h2>
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+      <ul class="list-disc pl-5">
+
+        <!-- Section 1: Engineering Mathematics -->
+        <li class="font-bold">Section 1: Engineering Mathematics</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="discrete-math">
+            <label for="discrete-math">Discrete Mathematics</label>
+            <ul class="list-disc pl-5">
+              <li>Propositional and first order logic</li>
+              <li>Sets, relations, functions, partial orders and lattices</li>
+              <li>Monoids, Groups</li>
+              <li>Graphs: connectivity, matching, colouring</li>
+              <li>Combinatorics: counting, recurrence relations, generating functions</li>
+            </ul>
+          </li>
+          <li>
+            <input type="checkbox" id="linear-algebra">
+            <label for="linear-algebra">Linear Algebra</label>
+            <ul class="list-disc pl-5">
+              <li>Matrices, determinants</li>
+              <li>System of linear equations</li>
+              <li>Eigenvalues and eigenvectors</li>
+              <li>LU decomposition</li>
+            </ul>
+          </li>
+          <li>
+            <input type="checkbox" id="calculus">
+            <label for="calculus">Calculus</label>
+            <ul class="list-disc pl-5">
+              <li>Limits, continuity and differentiability</li>
+              <li>Maxima and minima</li>
+              <li>Mean value theorem</li>
+              <li>Integration</li>
+            </ul>
+          </li>
+          <li>
+            <input type="checkbox" id="probability-stats">
+            <label for="probability-stats">Probability and Statistics</label>
+            <ul class="list-disc pl-5">
+              <li>Random variables</li>
+              <li>Uniform, normal, exponential, Poisson and binomial distributions</li>
+              <li>Mean, median, mode and standard deviation</li>
+              <li>Conditional probability and Bayes theorem</li>
+            </ul>
+          </li>
+        </ul>
+
+        <!-- Section 2: Digital Logic -->
+        <li class="font-bold">Section 2: Digital Logic</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="boolean-algebra">
+            <label for="boolean-algebra">Boolean algebra</label>
+          </li>
+          <li>
+            <input type="checkbox" id="combinational-circuits">
+            <label for="combinational-circuits">Combinational and sequential circuits</label>
+          </li>
+          <li>
+            <input type="checkbox" id="minimization">
+            <label for="minimization">Minimization</label>
+          </li>
+          <li>
+            <input type="checkbox" id="number-representations">
+            <label for="number-representations">Number representations and computer arithmetic</label>
+            <ul class="list-disc pl-5">
+              <li>Fixed-point arithmetic</li>
+              <li>Floating-point arithmetic</li>
+            </ul>
+          </li>
+        </ul>
+
+        <!-- Section 3: Computer Organization and Architecture -->
+        <li class="font-bold">Section 3: Computer Organization and Architecture</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="machine-instructions">
+            <label for="machine-instructions">Machine instructions and addressing modes</label>
+          </li>
+          <li>
+            <input type="checkbox" id="pipeline">
+            <label for="pipeline">Instruction pipelining</label>
+            <ul class="list-disc pl-5">
+              <li>Pipeline hazards</li>
+            </ul>
+          </li>
+          <li>
+            <input type="checkbox" id="memory-hierarchy">
+            <label for="memory-hierarchy">Memory hierarchy</label>
+            <ul class="list-disc pl-5">
+              <li>Cache</li>
+              <li>Main memory</li>
+              <li>Secondary storage</li>
+            </ul>
+          </li>
+          <li>
+            <input type="checkbox" id="io-interface">
+            <label for="io-interface">I/O interface</label>
+            <ul class="list-disc pl-5">
+              <li>Interrupt mode</li>
+              <li>DMA mode</li>
+            </ul>
+          </li>
+        </ul>
+
+        <!-- Section 4: Programming and Data Structures -->
+        <li class="font-bold">Section 4: Programming and Data Structures</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="programming-c">
+            <label for="programming-c">Programming in C</label>
+          </li>
+          <li>
+            <input type="checkbox" id="recursion">
+            <label for="recursion">Recursion</label>
+          </li>
+          <li>
+            <input type="checkbox" id="data-structures">
+            <label for="data-structures">Data Structures</label>
+            <ul class="list-disc pl-5">
+              <li>Arrays</li>
+              <li>Stacks</li>
+              <li>Queues</li>
+              <li>Linked lists</li>
+              <li>Trees</li>
+              <li>Binary search trees</li>
+              <li>Binary heaps</li>
+              <li>Graphs</li>
+            </ul>
+          </li>
+        </ul>
+
+        <!-- Section 5: Algorithms -->
+        <li class="font-bold">Section 5: Algorithms</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="searching-sorting">
+            <label for="searching-sorting">Searching and Sorting</label>
+          </li>
+          <li>
+            <input type="checkbox" id="hashing">
+            <label for="hashing">Hashing</label>
+          </li>
+          <li>
+            <input type="checkbox" id="algorithm-design">
+            <label for="algorithm-design">Algorithm Design Techniques</label>
+            <ul class="list-disc pl-5">
+              <li>Greedy</li>
+              <li>Dynamic programming</li>
+              <li>Divide-and-conquer</li>
+            </ul>
+          </li>
+          <li>
+            <input type="checkbox" id="graph-algorithms">
+            <label for="graph-algorithms">Graph Algorithms</label>
+            <ul class="list-disc pl-5">
+              <li>Graph traversals</li>
+              <li>Minimum spanning trees</li>
+              <li>Shortest paths</li>
+            </ul>
+          </li>
+        </ul>
+
+        <!-- Section 6: Theory of Computation -->
+        <li class="font-bold">Section 6: Theory of Computation</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="regular-expressions">
+            <label for="regular-expressions">Regular expressions and finite automata</label>
+          </li>
+          <li>
+            <input type="checkbox" id="context-free-grammars">
+            <label for="context-free-grammars">Context-free grammars and push-down automata</label>
+          </li>
+          <li>
+            <input type="checkbox" id="languages-turing-machines">
+            <label for="languages-turing-machines">Languages, pumping lemma, and Turing machines</label>
+          </li>
+        </ul>
+
+        <!-- Section 7: Compiler Design -->
+        <li class="font-bold">Section 7: Compiler Design</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="lexical-analysis">
+            <label for="lexical-analysis">Lexical analysis</label>
+          </li>
+          <li>
+            <input type="checkbox" id="parsing">
+            <label for="parsing">Parsing</label>
+          </li>
+          <li>
+            <input type="checkbox" id="runtime-environments">
+            <label for="runtime-environments">Runtime environments</label>
+          </li>
+          <li>
+            <input type="checkbox" id="optimization">
+            <label for="optimization">Code optimization and data flow analysis</label>
+          </li>
+        </ul>
+
+        <!-- Section 8: Operating System -->
+        <li class="font-bold">Section 8: Operating System</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="system-calls">
+            <label for="system-calls">System calls</label>
+          </li>
+          <li>
+            <input type="checkbox" id="processes-threads">
+            <label for="processes-threads">Processes and threads</label>
+          </li>
+          <li>
+            <input type="checkbox" id="concurrency">
+            <label for="concurrency">Concurrency and synchronization</label>
+          </li>
+          <li>
+            <input type="checkbox" id="memory-management">
+            <label for="memory-management">Memory management and virtual memory</label>
+          </li>
+        </ul>
+
+        <!-- Section 9: Databases -->
+        <li class="font-bold">Section 9: Databases</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="er-model">
+            <label for="er-model">ER-model</label>
+          </li>
+          <li>
+            <input type="checkbox" id="sql">
+            <label for="sql">Relational model and SQL</label>
+          </li>
+          <li>
+            <input type="checkbox" id="transactions">
+            <label for="transactions">Transactions and concurrency control</label>
+          </li>
+        </ul>
+
+        <!-- Section 10: Computer Networks -->
+        <li class="font-bold">Section 10: Computer Networks</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="osi-tcpip">
+            <label for="osi-tcpip">OSI and TCP/IP Protocol Stacks</label>
+          </li>
+          <li>
+            <input type="checkbox" id="routing-protocols">
+            <label for="routing-protocols">Routing protocols</label>
+            <ul class="list-disc pl-5">
+              <li>Shortest path</li>
+              <li>Flooding</li>
+              <li>Distance vector</li>
+              <li>Link state routing</li>
+            </ul>
+          </li>
+          <li>
+            <input type="checkbox" id="ip-support">
+            <label for="ip-support">IP support protocols</label>
+            <ul class="list-disc pl-5">
+              <li>ARP</li>
+              <li>DHCP</li>
+              <li>ICMP</li>
+              <li>NAT</li>
+            </ul>
+          </li>
+                     <li>
+              <input type="checkbox" id="application-layer">
+              <label for="application-layer">Application layer protocols</label>
+              <ul class="list-disc pl-5">
+                <li>DNS</li>
+                <li>HTTP</li>
+                <li>FTP</li>
+                <li>EMAIL</li>
+              </ul>
+            </li>
+        </ul>
+
+        <!-- Section 11: Software Engineering -->
+        <li class="font-bold">Section 11: Software Engineering</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="software-processes">
+            <label for="software-processes">Software processes and methodologies</label>
+          </li>
+          <li>
+            <input type="checkbox" id="design-patterns">
+            <label for="design-patterns">Design patterns</label>
+          </li>
+          <li>
+            <input type="checkbox" id="testing">
+            <label for="testing">Software testing</label>
+          </li>
+          <li>
+            <input type="checkbox" id="version-control">
+            <label for="version-control">Version control systems (Git)</label>
+          </li>
+        </ul>
+
+        <!-- Section 12: Web Development -->
+        <li class="font-bold">Section 12: Web Development</li>
+        <ul class="list-disc pl-5">
+          <li>
+            <input type="checkbox" id="html-css">
+            <label for="html-css">HTML and CSS</label>
+          </li>
+          <li>
+            <input type="checkbox" id="javascript">
+            <label for="javascript">JavaScript</label>
+          </li>
+          <li>
+            <input type="checkbox" id="frontend-frameworks">
+            <label for="frontend-frameworks">Frontend frameworks (React, Angular, Vue)</label>
+          </li>
+          <li>
+            <input type="checkbox" id="backend-development">
+            <label for="backend-development">Backend development (Node.js, Express)</label>
+          </li>
+          <li>
+            <input type="checkbox" id="databases-web">
+            <label for="databases-web">Web Databases (SQL, MongoDB)</label>
+          </li>
+        </ul>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-center p-4 mt-6">
+    <p>CS Topics Checklist | 2025</p>
+  </footer>
+</body>
+</html>
+
